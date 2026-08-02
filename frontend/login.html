@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — LMS</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Inter,Arial,sans-serif;}
+  body{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:#1b1f45;
+  }
+  .card{
+    background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+  }
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+  .brand .icon{width:24px;height:24px;stroke:#e2833f;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .brand h1{font-size:19px;color:#1b1f45;}
+  h2{font-size:20px;margin-bottom:6px;color:#1b1f45;}
+  p.sub{color:#6b7086;font-size:13px;margin-bottom:22px;}
+  label{font-size:12.5px;font-weight:600;color:#333;display:block;margin-bottom:6px;}
+  input{
+    width:100%;padding:11px 12px;border:1px solid #e5e7f0;border-radius:9px;font-size:13.5px;
+    margin-bottom:16px;outline:none;
+  }
+  input:focus{border-color:#e2833f;}
+  button{
+    width:100%;padding:12px;border:none;border-radius:9px;background:#e2833f;color:#fff;
+    font-weight:700;font-size:14px;cursor:pointer;
+  }
+  button:hover{background:#c96f2e;}
+  .error{color:#e0455a;font-size:12.5px;margin-bottom:10px;display:none;}
+</style>
+</head>
+<body>
+  <form class="card" id="loginForm">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" class="icon"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M19 3v16"/></svg>
+      <h1>LMS</h1>
+    </div>
+    <h2>Welcome back</h2>
+    <p class="sub">Log in to manage your library.</p>
+
+    <div class="error" id="errorMsg">Invalid email or password.</div>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" required placeholder="admin@library.edu">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" required placeholder="••••••••">
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <script>
+    const API_BASE_URL = "https://YOUR-BACKEND-DOMAIN/api"; // same as api.js
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        if (!res.ok) throw new Error("Login failed");
+        const data = await res.json(); // expects { token: "..." }
+        localStorage.setItem("lms_token", data.token);
+        window.location.href = "index.html";
+      } catch (err) {
+        errorMsg.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
