@@ -28,22 +28,8 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-
-    // Allow requests without an origin (Postman, mobile apps, etc.)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error("Not allowed by CORS"));
-  },
-
+  origin: allowedOrigins,
   credentials: true,
-
   methods: [
     "GET",
     "POST",
@@ -52,15 +38,11 @@ app.use(cors({
     "DELETE",
     "OPTIONS"
   ],
-
   allowedHeaders: [
     "Content-Type",
     "Authorization"
   ]
 }));
-
-// Handle browser preflight requests
-app.options("*", cors());
 
 
 // ===============================
@@ -70,7 +52,7 @@ app.options("*", cors());
 app.use(express.json());
 
 
-// Simple request logger
+// Request logger
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
   next();
