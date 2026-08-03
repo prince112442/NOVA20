@@ -11,7 +11,7 @@
  * responsible for showing an empty/error state instead of fake numbers.
  */
 
-const API_BASE_URL = "https://nova20-1.onrender.com";"; // <-- change this after deploying the backend
+const API_BASE_URL = "https://lms20-xk6g.onrender.com/api";"; // <-- change this after deploying the backend
 
 function authHeaders() {
   const token = localStorage.getItem("lms_token");
